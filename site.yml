@@ -17,6 +17,27 @@
       update_cache: yes
     when: ansible_distribution == "Ubuntu"
 
+  - name: create user
+    tags: always
+    ansible.builtin.user:
+      name: papa
+      groups: root
+
+  - name: add sudoers file for papa
+    tags: always
+    ansible.builtin.copy:
+      src: sudoer_papa
+      dest: /etc/sudoers.d/papa
+      owner: root
+      group: root
+      mode: 0440
+
+  - name: add ssh key for papa user
+    tags: always
+    ansible.builtin.authorized_key:
+      user: papa
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLXdY9yKXNenPMqmaDst3K/sNDFejvG7loiudboGiF7 josh@ubuntu-ws"
+
 - hosts: web_servers
   become: true
   tasks:
